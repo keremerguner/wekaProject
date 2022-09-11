@@ -1,0 +1,80 @@
+package weka.api;
+
+//---[Kutuphaneler]---
+
+import java.util.Random;
+import weka.core.Instances;
+import weka.core.converters.ConverterUtils.DataSource;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Remove;
+import weka.filters.unsupervised.attribute.NumericToNominal;
+import weka.classifiers.lazy.IBk;
+import weka.classifiers.Evaluation;
+
+public class Test
+{
+	public static void main(String args[]) throws Exception
+	{
+		//---[Dataset'i Ac]---
+		
+		DataSource source = new DataSource("C:/Dataset.arff");
+		Instances dataset = source.getDataSet();
+		
+		//---[1. Attribute'u sil]---
+		
+		//Ayarlar
+
+		Remove remove = new Remove();
+		String[] opts = new String[]{ "-R", "1"};
+		remove.setOptions(opts);
+		remove.setInputFormat(dataset);
+		
+		//Filtreyi Uygula
+		
+		dataset = Filter.useFilter(dataset, remove);
+		
+		//---[Bacak Sayisini Filtrele]---
+		
+		//Ayarlar
+		
+		NumericToNominal numericToNominal = new NumericToNominal();
+		opts = new String[]{ "-R", "first-last"};
+		numericToNominal.setOptions(opts);
+		numericToNominal.setInputFormat(dataset);
+		
+		//Filtreyi Uygula
+		
+		dataset = Filter.useFilter(dataset,numericToNominal);
+		
+		//---[IBk Algoritmasi]---
+		
+		//Hedef Ozellik
+
+		dataset.setClassIndex(dataset.numAttributes() - 1);
+		
+		//Ayarlar
+		
+		IBk IBk = new IBk();
+		IBk.setKNN(1);
+		IBk.setCrossValidate(true);
+		IBk.setWindowSize(0);
+		IBk.setMeanSquared(false);
+		IBk.buildClassifier(dataset);
+		
+		//Hesaplama
+		
+		Evaluation Evaluation = new Evaluation(dataset);
+		Evaluation.crossValidateModel(IBk,dataset,10,new Random(1));
+		
+		//---[Yazdir]---
+		
+		//Dataset'i Yazdir
+		
+		System.out.println("--------------------\nBEYKOZ UNIVERSITESI\n--------------------\n\nMühendislik Projesi [HAYVANAT BAHÇELERINDE HAYVANLARIN NITELIKLERINE GORE SINIFLANDIRILMASI]\n\nAnil Berk Bakir - 2004040045\n\n");
+		System.out.println(dataset.toString());
+		
+		//Sonucu Yazdir
+		
+		System.out.println(Evaluation.toSummaryString());
+	}
+}

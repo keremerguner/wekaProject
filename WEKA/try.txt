@@ -1,0 +1,41 @@
+import weka.core.jvm as jvm
+from weka.core.converters import Loader
+import weka.core.converters as converters
+from weka.classifiers import Classifier
+import weka.plot.graph as graph
+from weka.classifiers import Evaluation
+from weka.core.classes import Random
+from weka.filters import Filter
+from weka.classifiers import PredictionOutput
+import re
+from weka.classifiers import FilteredClassifier
+import weka.plot as plot
+
+if plot.matplotlib_available:
+    import matplotlib.pyplot as plt
+
+data_dir = "C:\\Users\\ergun\\Desktop\\veriseti.arff"
+jvm.start()
+
+loader = Loader(classname="weka.core.converters.ArffLoader")
+data = loader.load_file(data_dir)
+data.class_is_last()
+
+
+print(data)
+
+
+
+cls = Classifier(classname="weka.classifiers.trees.J48", options=["-C", "0.3"])
+
+
+for index, inst in enumerate(data):
+    pred = cls.classify_instance(inst)
+    dist = cls.distribution_for_instance(inst)
+    print(str(index+1) + ": label index=" + str(pred) + ", class distribution=" + str(dist))
+
+
+
+
+jvm.stop()
+

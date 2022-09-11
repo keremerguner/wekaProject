@@ -1,0 +1,6 @@
+https://www.youtube.com/watch?v=6o19TPn181g&list=PLea0WJq13cnBVfsPVNyRAus2NK-KhCuzJ
+https://www.youtube.com/watch?v=YT72KkkfD3w
+https://www.youtube.com/watch?v=cwbPzumwgNo
+https://fracpete.github.io/python-weka-wrapper3/examples.html
+https://github.com/fracpete/python-weka-wrapper3-examples
+https://weka.sourceforge.io/doc.dev/weka/classifiers/lazy/package-summary.html

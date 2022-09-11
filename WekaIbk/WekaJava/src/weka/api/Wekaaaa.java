@@ -1,0 +1,49 @@
+package weka.api;
+import java.util.Random;
+import weka.core.Instances;
+import weka.core.converters.ConverterUtils.DataSource;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Remove;
+import weka.filters.unsupervised.attribute.NumericToNominal;
+import weka.classifiers.lazy.IBk;
+import weka.classifiers.Evaluation;
+
+
+public class Wekaaaa {
+
+	public static void main(String[] args) throws Exception {
+		
+		DataSource source = new DataSource("C:\\Users\\ergun\\Desktop\\veriseti.arff");
+		Instances dataset = source.getDataSet();
+		
+		Remove remove = new Remove();
+		String[] opts = new String[]{ "-R", "1"};
+		remove.setOptions(opts);
+		remove.setInputFormat(dataset);
+		
+		dataset = Filter.useFilter(dataset, remove);
+		
+		NumericToNominal numericToNominal = new NumericToNominal();
+		opts = new String[]{ "-R", "first-last"};
+		numericToNominal.setOptions(opts);
+		numericToNominal.setInputFormat(dataset);
+		
+		dataset = Filter.useFilter(dataset,numericToNominal);
+		
+		dataset.setClassIndex(dataset.numAttributes() - 1 );
+		
+		IBk IBk = new IBk();
+		IBk.setKNN(7);
+		IBk.setCrossValidate(true);
+		IBk.setWindowSize(0);
+		IBk.setMeanSquared(false);
+		IBk.buildClassifier(dataset);
+		
+		Evaluation Evaluation = new Evaluation(dataset);
+		Evaluation.crossValidateModel(IBk,dataset,10,new Random(1));	
+		
+		
+		
+	}
+
+}
